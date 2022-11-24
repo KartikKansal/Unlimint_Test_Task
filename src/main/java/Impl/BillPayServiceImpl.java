@@ -1,5 +1,6 @@
 package Impl;
 
+import JPathRepo.JsonPaths;
 import ObjectRepo.BaseOR;
 import ObjectRepo.BillPayServiceOR;
 import Util.UserUtil;
@@ -9,10 +10,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class BillPayServiceImpl {
+public class BillPayServiceImpl implements JsonPaths {
     WebDriver driver;
     public static String fromAccountIdVal;
-    public static String PayeeAmount = "789";
+    public static String PayeeAmount = Amount;
     public static String payeeName;
     public BillPayServiceImpl(WebDriver driver){
         this.driver = driver;
@@ -23,17 +24,17 @@ public class BillPayServiceImpl {
     public void fillBillPayInfo(){
         ResponseBody newUser = UserUtil.CreateUser();
         JsonPath pathEval = newUser.jsonPath();
-         payeeName = pathEval.get("results[0].login.username").toString();
+         payeeName = pathEval.get(userName).toString();
         driver.findElement(By.xpath(BillPayServiceOR.PayeeName)).sendKeys(payeeName);
         driver.findElement(By.xpath(BillPayServiceOR.PayeeAddress)).sendKeys(pathEval.
-                get("results[0].location.street.name").toString()+" "+pathEval.
-                get("results[0].location.street.number").toString());
-        driver.findElement(By.xpath(BillPayServiceOR.PayeeCity)).sendKeys(pathEval.get("results[0].location.city").toString());
-        driver.findElement(By.xpath(BillPayServiceOR.PayeeState)).sendKeys(pathEval.get("results[0].location.state").toString());
-        driver.findElement(By.xpath(BillPayServiceOR.PayeeZipCode)).sendKeys(pathEval.get("results[0].location.postcode").toString());
-        driver.findElement(By.xpath(BillPayServiceOR.PayeePhone)).sendKeys(pathEval.get("results[0].cell").toString());
-        driver.findElement(By.xpath(BillPayServiceOR.PayeeAccNo)).sendKeys("12345");
-        driver.findElement(By.xpath(BillPayServiceOR.PayeeVerifyAccNo)).sendKeys("12345");
+                get(streetName).toString()+" "+pathEval.
+                get(streetNumber).toString());
+        driver.findElement(By.xpath(BillPayServiceOR.PayeeCity)).sendKeys(pathEval.get(City).toString());
+        driver.findElement(By.xpath(BillPayServiceOR.PayeeState)).sendKeys(pathEval.get(State).toString());
+        driver.findElement(By.xpath(BillPayServiceOR.PayeeZipCode)).sendKeys(pathEval.get(PostCode).toString());
+        driver.findElement(By.xpath(BillPayServiceOR.PayeePhone)).sendKeys(pathEval.get(Cell).toString());
+        driver.findElement(By.xpath(BillPayServiceOR.PayeeAccNo)).sendKeys(AccNo);
+        driver.findElement(By.xpath(BillPayServiceOR.PayeeVerifyAccNo)).sendKeys(AccNo);
         driver.findElement(By.xpath(BillPayServiceOR.PayeeAmount)).sendKeys(PayeeAmount);
         Select sel = new Select(driver.findElement(By.xpath(BillPayServiceOR.fromAccountId)));
         String fromAccountId = sel.getFirstSelectedOption().getAttribute("value");
